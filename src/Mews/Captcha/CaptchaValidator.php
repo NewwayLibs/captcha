@@ -6,6 +6,8 @@ class CaptchaValidator extends Validator
 {
     public function validateCaptcha($attribute, $value, $parameters)
     {
-        return \Captcha::check($value);
+        $formId = !empty($parameters) ? array_shift($parameters) : null;
+
+        return \Captcha::check($value, $formId);
     }
 }
