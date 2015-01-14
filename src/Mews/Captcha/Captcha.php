@@ -1,7 +1,7 @@
 <?php namespace Mews\Captcha;
 
 use Config;
-use Session;
+use Cache;
 use Hash;
 use URL;
 use Str;
@@ -83,7 +83,7 @@ class Captcha
         if (!$formId) {
             $formId = hash('sha256', URL::previous());
         }
-        Session::put('captchaHash.' . $formId, $this->hashMake($code));
+        Cache::put('captchaHash.' . $formId, $this->hashMake($code), 3600);
 
         $bg_image = $this->asset('backgrounds');
 
@@ -206,7 +206,7 @@ class Captcha
         if (!$formId) {
             $formId = hash('sha256', URL::previous());
         }
-        $captchaHash = Session::get('captchaHash.' . $formId);
+        $captchaHash = Cache::get('captchaHash.' . $formId);
 
         $result = $value != null
             && $captchaHash != null
@@ -214,7 +214,7 @@ class Captcha
             && $this->hashCheck($value, $captchaHash);
 
         // forget the hash to prevent replay
-        Session::forget('captchaHash');
+        Cache::forget('captchaHash');
         return $result;
     }
 
