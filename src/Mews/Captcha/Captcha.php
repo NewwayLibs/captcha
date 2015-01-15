@@ -214,7 +214,7 @@ class Captcha
             && $this->hashCheck($value, $captchaHash);
 
         // forget the hash to prevent replay
-        Cache::forget('captchaHash');
+        Cache::forget('captchaHash.' . $formId);
         return $result;
     }
 
